@@ -3,7 +3,7 @@ exports.up = knex => knex.schema.createTable("called", table => {
   table.integer("user_id").references("id").inTable("users")
   
   table.enum("type",['lojista','colaborador', 'cliente', 'terceirizado']);
-  table.text("name");
+  table.text("victim_name");
   table.integer("age");
   table.text("phone");
   table.enum("sexo",['M','F'])

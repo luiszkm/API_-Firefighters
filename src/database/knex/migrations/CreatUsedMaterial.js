@@ -3,7 +3,7 @@ exports.up = knex => knex.schema.createTable("used_material", table => {
   table.integer("called_id").references("id").inTable("called").onDelete("CASCADE")
   table.integer("user_id").references("id").inTable("users")
 
-  table.text("name").notNullable()
+  table.text("material_name").notNullable()
   
   table.timestamp("created_at").default(knex.fn.now());
 });

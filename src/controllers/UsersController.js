@@ -33,7 +33,7 @@ class UsersController {
 
   async update(req, res) {
 
-    const { name, email, password , old_password } = req.body
+    const { name, password , old_password } = req.body
 
     const user_id = req.user.id
 
@@ -45,14 +45,7 @@ class UsersController {
       throw new AppError("Usuário não encontrado")
     }
 
-    const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email])
-    
-    if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
-      throw new AppError("Este email ja esta em uso")
-    }
-
     user.name = name ?? user.name
-    user.email = email ?? user.email
 
     if (password && !old_password) {
       throw new AppError('Voce precisa informar a senha antiga para redefinir a senha')
@@ -70,11 +63,10 @@ class UsersController {
     await database.run(`
       UPDATE users SET
       name = ?,
-      email = ?,
       password = ?,
       updated_at = DATETIME('now')
       WHERE id = ?
-    `, [user.name, user.email, user.password, user.id])
+    `, [user.name, user.password, user.id])
 
   
     return res.json()
@@ -82,9 +74,10 @@ class UsersController {
 
   async updateAdm(req, res) {
 
-    const {  email, password  } = req.body
+    const {  email, password, name  } = req.body
 
     const {id} = req.params
+
     const database = await sqliteConnection()
 
     const user = await database.get("SELECT * FROM users WHERE id = (?)", [id])
@@ -92,13 +85,14 @@ class UsersController {
     if (!user) {
       throw new AppError("Usuário não encontrado")
     }
+    user.name = name ?? user.name
+
 
     const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email])
     
     if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
       throw new AppError("Este email ja esta em uso")
     }
-    console.log(user.password);
 
   
       user.password = await hash(password, 8)
@@ -115,6 +109,11 @@ class UsersController {
 
   
     return res.json()
+  }
+
+  async show (req, res){
+
+    return response.json()
   }
 }
 

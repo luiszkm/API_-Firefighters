@@ -32,9 +32,6 @@ class SessionsController{
 
     return res.json({user, token});
   }
-
-
 }
-
 
 module.exports = SessionsController

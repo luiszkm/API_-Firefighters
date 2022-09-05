@@ -2,11 +2,11 @@ const knex = require("../database/knex")
 
 class CalledController {
   async create(req, response) {
-    
+
     const {
-      type, name, age, sexo, phone,
+      type, victim_name, age, sexo, phone,
       rg, escortPhone, escortName,
-      medicines,traumas, clinical,wound
+      medicines, traumas, clinical, wound
     } = req.body
 
     const user_id = req.user.id
@@ -14,7 +14,7 @@ class CalledController {
     const called_id = await knex("called")
       .insert({
         type,
-        name,
+        victim_name,
         age,
         phone,
         rg,
@@ -25,31 +25,31 @@ class CalledController {
         user_id
       })
 
-    const clinicalInsert = clinical.map(name => {
+    const clinicalInsert = clinical.map(clinical_name => {
       return {
         user_id,
-        name,
+        clinical_name,
         called_id,
       }
     })
-    
+
     await knex("clinical").insert(clinicalInsert)
 
 
-    const tagsInsert = traumas.map(name => {
+    const traumasInsert = traumas.map(traumas_name => {
       return {
         user_id,
-        name,
+        traumas_name,
         called_id,
       }
     })
 
-    await knex("traumas").insert(tagsInsert)
+    await knex("traumas").insert(traumasInsert)
 
-    const woundInsert = wound.map(name => {
+    const woundInsert = wound.map(wound_name => {
       return {
         user_id,
-        name,
+        wound_name,
         called_id,
       }
     })
@@ -61,13 +61,13 @@ class CalledController {
   }
 
   async update(request, response) {
-    const { name, age, sexo, phone, rg, escortPhone, escortName } = request.body
+    const { victim_name, age, sexo, phone, rg, escortPhone, escortName } = request.body
 
     const { id } = request.params
 
     const called = await knex("called").where({ id })
       .update({
-        name,
+        victim_name,
         age,
         phone,
         rg,
@@ -82,8 +82,10 @@ class CalledController {
   async show(request, response) {
     const { id } = request.params
 
-    const note = await knex("called").where({ id }).first()
-    const tags = await knex("tags").where({ note_id: id })
+    const note = await knex("called")
+      .where({ id }).first()
+    const tags = await knex("tags")
+      .where({ note_id: id })
       .orderBy("name")
     const links = await knex("links")
       .where({ note_id: id })

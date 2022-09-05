@@ -6,10 +6,9 @@ const notesRoutes = Router()
 
 const  callerController = new CalledController()
 
-notesRoutes.use(ensureAuthenticated)
 
 notesRoutes.get('/', callerController.index)
-notesRoutes.post('/', callerController.create)
+notesRoutes.post('/',ensureAuthenticated ,callerController.create)
 notesRoutes.get('/:id', callerController.show)
 notesRoutes.put('/:id', callerController.update)
 notesRoutes.delete('/:id', callerController.delete)
