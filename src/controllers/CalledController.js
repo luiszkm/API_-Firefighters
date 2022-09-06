@@ -46,15 +46,16 @@ class CalledController {
 
     await knex("traumas").insert(traumasInsert)
 
-    const woundInsert = wound.map(wound_name => {
+    const woundsInsert = wound.map(wound => {
       return {
         user_id,
-        wound_name,
+        wound_name:wound.name,
+        wound_local:wound.local,
         called_id,
       }
     })
 
-    await knex("wound").insert(woundInsert)
+    await knex("wound").insert(woundsInsert)
 
 
     return response.json()

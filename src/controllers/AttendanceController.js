@@ -20,21 +20,23 @@ class AttendanceController {
 
 
 
-        const proceduresInsert = procedures.map(name => {
+        const proceduresInsert = procedures.map(procedures => {
           return {
             user_id,
-            name,
+            procedures_name:procedures,
             called_id,
           }
         })
+
         
         await knex("procedures").insert(proceduresInsert)
 
         
-        const used_materialInsert = used_material.map(name => {
+        const used_materialInsert = used_material.map(material => {
           return {
             user_id,
-            name,
+            material_name:material.name,
+            material_amount:material.amount,
             called_id,
           }
         })

@@ -86,6 +86,7 @@ class UsersController {
       throw new AppError("Usuário não encontrado")
     }
     user.name = name ?? user.name
+    user.email = email ?? user.email
 
 
     const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email])
