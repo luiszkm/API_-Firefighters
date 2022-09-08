@@ -1,16 +1,17 @@
 const {Router} = require("express")
 const CalledController = require("../controllers/CalledController")
 const ensureAuthenticated = require("../middleware/ensureAuthenticated")
+const admAuthenticated = require("../middleware/admAuthenticated")
 
-const notesRoutes = Router()
+const calledRoutes = Router()
 
 const  callerController = new CalledController()
 
 
-notesRoutes.get('/', callerController.index)
-notesRoutes.post('/',ensureAuthenticated ,callerController.create)
-notesRoutes.get('/:id', callerController.show)
-notesRoutes.put('/:id', callerController.update)
-notesRoutes.delete('/:id', callerController.delete)
+calledRoutes.get('/',ensureAuthenticated, callerController.index)
+calledRoutes.post('/',ensureAuthenticated ,callerController.create)
+calledRoutes.get('/:id',ensureAuthenticated, callerController.show)
+calledRoutes.put('/:id',admAuthenticated, callerController.update)
+calledRoutes.delete('/:id', callerController.delete)
 
-module.exports = notesRoutes
+module.exports = calledRoutes

@@ -18,7 +18,7 @@ const userAvatarController = new UserAvatarController()
 
 usersRoutes.post("/", usersController.create)
 
-usersRoutes.put("/:id", usersController.updateAdm)
+usersRoutes.put("/adm",admAuthenticated, usersController.updateAdm)
 usersRoutes.put("/",ensureAuthenticated, usersController.update)
 usersRoutes.patch("/avatar",ensureAuthenticated, upload.single("avatar"),userAvatarController.update)
 

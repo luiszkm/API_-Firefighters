@@ -76,18 +76,17 @@ class UsersController {
 
     const {  email, password, name  } = req.body
 
-    const {id} = req.params
+    const {user_id} = req.query
 
     const database = await sqliteConnection()
 
-    const user = await database.get("SELECT * FROM users WHERE id = (?)", [id])
-
+    const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id])
+    console.log(user);
     if (!user) {
       throw new AppError("Usuário não encontrado")
     }
     user.name = name ?? user.name
     user.email = email ?? user.email
-
 
     const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email])
     

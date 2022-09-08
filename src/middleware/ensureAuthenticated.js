@@ -18,7 +18,7 @@ function ensureAuthenticated(req, res, next) {
       id: Number(user_id),
 
     }
-    console.log(user_id);
+    
     return next()
   } catch {
     throw new AppError("JWT token invalido", 401)

@@ -3,7 +3,7 @@ const AppError = require('../utils/AppError');
 const { verify } = require("jsonwebtoken");
 const authConfig = require("../config/auth");
 
-async function AdmAuthenticated(req, response, next) {
+async function AdmAuthenticated(req, res, next) {
  
   const authHeader = req.headers.authorization;
 
@@ -21,9 +21,10 @@ async function AdmAuthenticated(req, response, next) {
      
     }
     const userAdm = await knex('users').where({id: Number(user_id) });
+
  
-    const isAdmin = userAdm[0].admin === 1;
-   
+    const isAdmin = userAdm[0].admin == 1;
+
     if (!isAdmin) {
       throw new AppError('Você não é um administrador', 401);
       
