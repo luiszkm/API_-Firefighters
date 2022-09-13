@@ -6,7 +6,48 @@ class CalledController {
     const {
       type, victim_name, age, sexo, phone,
       rg, escortPhone, escortName,
-      medicines, traumas, clinical, wound
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      pa1, timePa1, pa2, timePa2,
+      temperature, pulse, spo2,
+      victim_destiny, descriptions,
+      street, medicines,
+      number,
+      district,
+      city,
+      traumas,
+      clinical,
+      wound,
+      procedures, used_material,
     } = req.body
 
     const user_id = req.user.id
@@ -25,6 +66,25 @@ class CalledController {
         user_id
       })
 
+
+    await knex("address").insert(
+      {
+        user_id,
+        street,
+        number,
+        district,
+        city,
+        called_id,
+      }
+    )
+
+
+    await knex("attendance")
+      .insert({
+        user_id, called_id, pa1, timePa1, pa2, timePa2,
+        temperature, pulse, spo2, victim_destiny, descriptions
+      })
+
     const clinicalInsert = clinical.map(clinical_name => {
       return {
         user_id,
@@ -35,28 +95,50 @@ class CalledController {
 
     await knex("clinical").insert(clinicalInsert)
 
+    
+        const traumasInsert = traumas.map(traumas_name => {
+          return {
+            user_id,
+            traumas_name,
+            called_id,
+          }
+        })
+    
+        await knex("traumas").insert(traumasInsert)
+    
+        const woundsInsert = wound.map(wound => {
+          return {
+            user_id,
+            wound_name: wound.name,
+            wound_local: wound.local,
+            called_id,
+          }
+        })
+    
+        await knex("wound").insert(woundsInsert)
 
-    const traumasInsert = traumas.map(traumas_name => {
+    const proceduresInsert = procedures.map(procedures => {
       return {
         user_id,
-        traumas_name,
+        procedures_name: procedures,
         called_id,
       }
     })
 
-    await knex("traumas").insert(traumasInsert)
 
-    const woundsInsert = wound.map(wound => {
+    await knex("procedures").insert(proceduresInsert)
+
+
+    const used_materialInsert = used_material.map(material => {
       return {
         user_id,
-        wound_name:wound.name,
-        wound_local:wound.local,
+        material_name: material.name,
+        material_amount: material.amount,
         called_id,
       }
     })
 
-    await knex("wound").insert(woundsInsert)
-
+    await knex("used_material").insert(used_materialInsert)
 
     return response.json()
   }
@@ -80,22 +162,23 @@ class CalledController {
     return response.json()
   }
 
-  async show(request, response) {
-    const { id } = request.params
-
-    const note = await knex("called")
+  async show(req, res) {
+    const { id } = req.params
+    console.log(id);
+    const called = await knex("called")
       .where({ id }).first()
-    const tags = await knex("tags")
-      .where({ note_id: id })
-      .orderBy("name")
-    const links = await knex("links")
-      .where({ note_id: id })
-      .orderBy("created_at")
+    const clinical = await knex("clinical")
+      .where({ called_id: id })
+      .orderBy("clinical_name")
+    const traumas = await knex("traumas")
+      .where({ called_id: id })
+      .orderBy("traumas_name")
+      
 
-    return response.json({
-      ...note,
-      tags,
-      links
+    return res.json({
+      ...called,
+      clinical,
+      traumas
     })
   }
 

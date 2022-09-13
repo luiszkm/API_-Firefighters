@@ -22,6 +22,8 @@ usersRoutes.put("/adm",admAuthenticated, usersController.updateAdm)
 usersRoutes.put("/",ensureAuthenticated, usersController.update)
 usersRoutes.patch("/avatar",ensureAuthenticated, upload.single("avatar"),userAvatarController.update)
 
+usersRoutes.get("/called",ensureAuthenticated, usersController.showCalled)
+
 
 
 module.exports = usersRoutes;

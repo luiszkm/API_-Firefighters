@@ -1,3 +1,4 @@
+const { json } = require("express")
 const knex = require("../database/knex")
 
 class AttendanceController {
@@ -11,7 +12,10 @@ class AttendanceController {
     } = req.body
 
     const user_id = req.user.id
-    const { called_id } = req.query
+    //const { called_id } = req.query
+    const called_id = await knex("called")
+   
+    
 
 
     await knex("attendance")

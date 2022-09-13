@@ -111,9 +111,14 @@ class UsersController {
     return res.json()
   }
 
-  async show (req, res){
+  async showCalled (req, res){
+    const user_id = req.user.id
 
-    return response.json()
+    const called = await knex("called")
+    .where({user_id})
+
+    console.log(called);
+    return res.json({called})
   }
 }
 
