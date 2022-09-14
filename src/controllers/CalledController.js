@@ -4,42 +4,11 @@ class CalledController {
   async create(req, response) {
 
     const {
-      type, victim_name, age, sexo, phone,
+      type, victimName, age, sexo, phone,
       rg, escortPhone, escortName,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       pa1, timePa1, pa2, timePa2,
       temperature, pulse, spo2,
-      victim_destiny, descriptions,
+      victimDestiny, descriptions,
       street, medicines,
       number,
       district,
@@ -47,7 +16,7 @@ class CalledController {
       traumas,
       clinical,
       wound,
-      procedures, used_material,
+      procedures, usedMaterial,
     } = req.body
 
     const user_id = req.user.id
@@ -55,7 +24,7 @@ class CalledController {
     const called_id = await knex("called")
       .insert({
         type,
-        victim_name,
+        victim_name:victimName,
         age,
         phone,
         rg,
@@ -82,7 +51,7 @@ class CalledController {
     await knex("attendance")
       .insert({
         user_id, called_id, pa1, timePa1, pa2, timePa2,
-        temperature, pulse, spo2, victim_destiny, descriptions
+        temperature, pulse, spo2, victim_destiny:victimDestiny, descriptions
       })
 
     const clinicalInsert = clinical.map(clinical_name => {
@@ -95,27 +64,27 @@ class CalledController {
 
     await knex("clinical").insert(clinicalInsert)
 
-    
-        const traumasInsert = traumas.map(traumas_name => {
-          return {
-            user_id,
-            traumas_name,
-            called_id,
-          }
-        })
-    
-        await knex("traumas").insert(traumasInsert)
-    
-        const woundsInsert = wound.map(wound => {
-          return {
-            user_id,
-            wound_name: wound.name,
-            wound_local: wound.local,
-            called_id,
-          }
-        })
-    
-        await knex("wound").insert(woundsInsert)
+
+    const traumasInsert = traumas.map(traumas_name => {
+      return {
+        user_id,
+        traumas_name,
+        called_id,
+      }
+    })
+
+    await knex("traumas").insert(traumasInsert)
+
+    const woundsInsert = wound.map(wound => {
+      return {
+        user_id,
+        wound_name: wound.name,
+        wound_local: wound.local,
+        called_id,
+      }
+    })
+
+    await knex("wound").insert(woundsInsert)
 
     const proceduresInsert = procedures.map(procedures => {
       return {
@@ -129,7 +98,7 @@ class CalledController {
     await knex("procedures").insert(proceduresInsert)
 
 
-    const used_materialInsert = used_material.map(material => {
+    const used_materialInsert = usedMaterial.map(material => {
       return {
         user_id,
         material_name: material.name,
@@ -164,7 +133,7 @@ class CalledController {
 
   async show(req, res) {
     const { id } = req.params
-    console.log(id);
+
     const called = await knex("called")
       .where({ id }).first()
     const clinical = await knex("clinical")
@@ -173,7 +142,7 @@ class CalledController {
     const traumas = await knex("traumas")
       .where({ called_id: id })
       .orderBy("traumas_name")
-      
+
 
     return res.json({
       ...called,
@@ -191,47 +160,20 @@ class CalledController {
     return response.json()
   }
 
-  async index(request, response) {
-    const { name, tags } = request.query
-    const user_id = request.user.id
+  async index(req, res) {
 
-    let notes;
+    const user_id = req.user.id
+    const {victim_name} = req.query
+    const {rg} = req.query
 
-    if (tags) {
-      const filterTags = tags.split(',').map(tag => tag.trim())
-
-      notes = await knex('tags')
-        .select([
-          'notes.id',
-          'notes.name',
-          'notes.user_id'
-        ])
-        .where('notes.user_id', user_id)
-        .whereLike('notes.name', `%${name}%`)
-        .whereIn('name', filterTags)
-        .innerJoin('notes', 'notes.id', 'tags.note_id')
-        .groupBy('notes.id')
-        .orderBy('notes.name');
-    } else {
-      notes = await knex("notes")
-        .where({ user_id })
-        .whereLike("name", `%${name}%`)
-        .orderBy("name")
-    }
-
-    const userTags = await knex('tags')
+    const called = await knex("called")
       .where({ user_id })
+     .whereLike("victim_name ", `%${victim_name}%`)
+      .whereLike("rg ", `%${rg}%`)
+      .orderBy("victim_name")
 
-    const notesWithTags = notes.map(note => {
-      const noteTags = userTags.filter(tag => tag.note_id === note.id)
 
-      return {
-        ...note,
-        tags: noteTags,
-      }
-    })
-
-    return response.json(notesWithTags)
+    return res.json(called)
 
   }
 
