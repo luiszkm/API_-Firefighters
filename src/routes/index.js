@@ -9,6 +9,7 @@ const traumasRoutes = require("./traumas.routes");
 const woundRoutes = require("./wound.routes");
 const materialRoutes = require("./material.routes");
 const proceduresRoutes = require("./procedures.routes");
+const amdRoutes = require("./adm.routes");
 
 
 
@@ -23,6 +24,9 @@ routes.use("/traumas", traumasRoutes);
 routes.use("/wound", woundRoutes);
 routes.use("/material", materialRoutes);
 routes.use("/procedures", proceduresRoutes);
+
+
+routes.use("/adm", amdRoutes);
 
 routes.use("/sessions", sessionsRoutes);
 

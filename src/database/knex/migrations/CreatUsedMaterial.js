@@ -1,5 +1,4 @@
-let today = new Date();
-const now = today.toLocaleString();
+
 
 exports.up = knex => knex.schema.createTable("used_material", table => {
   table.increments("id");
@@ -9,7 +8,7 @@ exports.up = knex => knex.schema.createTable("used_material", table => {
   table.text("material_name").notNullable()
   table.integer("material_amount")
   
-  table.timestamp("created_at").default(now);
+  table.timestamp("created_at").default(knex.fn.now());
 });
 
 exports.down = knex => knex.schema.dropTable("used_material");

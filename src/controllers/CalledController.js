@@ -1,6 +1,7 @@
 const knex = require("../database/knex")
 
 class CalledController {
+
   async create(req, response) {
 
     const {
@@ -17,14 +18,19 @@ class CalledController {
       clinical,
       wound,
       procedures, usedMaterial,
+      userName
     } = req.body
 
     const user_id = req.user.id
 
+    let today = new Date();
+    const now = today.toLocaleString();
+
+
     const called_id = await knex("called")
       .insert({
         type,
-        victim_name:victimName,
+        victim_name: victimName,
         age,
         phone,
         rg,
@@ -32,7 +38,9 @@ class CalledController {
         medicines,
         escortPhone,
         escortName,
-        user_id
+        user_id,
+        user_name:userName,
+        created_at: now
       })
 
 
@@ -44,6 +52,8 @@ class CalledController {
         district,
         city,
         called_id,
+        created_at: now
+
       }
     )
 
@@ -51,7 +61,9 @@ class CalledController {
     await knex("attendance")
       .insert({
         user_id, called_id, pa1, timePa1, pa2, timePa2,
-        temperature, pulse, spo2, victim_destiny:victimDestiny, descriptions
+        temperature, pulse, spo2, victim_destiny: victimDestiny, descriptions
+        , created_at: now
+
       })
 
     const clinicalInsert = clinical.map(clinical_name => {
@@ -134,8 +146,12 @@ class CalledController {
   async show(req, res) {
     const { id } = req.params
 
+
+   
+
     const called = await knex("called")
-      .where({ id }).first()
+      .where({ id })
+      .first()
     const clinical = await knex("clinical")
       .where({ called_id: id })
       .orderBy("clinical_name")
@@ -147,7 +163,8 @@ class CalledController {
     return res.json({
       ...called,
       clinical,
-      traumas
+      traumas,
+      
     })
   }
 
@@ -163,12 +180,12 @@ class CalledController {
   async index(req, res) {
 
     const user_id = req.user.id
-    const {victim_name} = req.query
-    const {rg} = req.query
+    const { victim_name } = req.query
+    const { rg } = req.query
 
     const called = await knex("called")
       .where({ user_id })
-     .whereLike("victim_name ", `%${victim_name}%`)
+      .whereLike("victim_name ", `%${victim_name}%`)
       .whereLike("rg ", `%${rg}%`)
       .orderBy("victim_name")
 

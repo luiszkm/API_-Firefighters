@@ -1,5 +1,3 @@
-let today = new Date();
-const now = today.toLocaleString();
 
 exports.up = knex => knex.schema.createTable("address", table => {
   table.increments("id");
@@ -12,8 +10,7 @@ exports.up = knex => knex.schema.createTable("address", table => {
   table.text("district");
   table.text("city")  
 
-  table.timestamp("created_at").default(now);
-  table.timestamp("updated_at").default(now);
+  table.integer("created_at").default(knex.fn.now());
 });
 
 exports.down = knex => knex.schema.dropTable("address");
