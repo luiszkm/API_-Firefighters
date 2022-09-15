@@ -1,13 +1,13 @@
 const { default: knex } = require("knex");
 
 const path = require('path');
-const { callbackify } = require("util");
 
 module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: path.resolve(__dirname,"src", "database", "database.db")
+      filename: path.resolve(__dirname,"src", "database", "database.db"),
+      timezone     : 'utc-3',
     },
     pool:{
       afterCreate:(conn, cb) =>{

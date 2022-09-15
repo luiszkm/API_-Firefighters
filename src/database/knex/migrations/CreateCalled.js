@@ -1,8 +1,11 @@
+let today = new Date();
+const now = today.toLocaleString();
+
 exports.up = knex => knex.schema.createTable("called", table => {
   table.increments("id");
   table.integer("user_id").references("id").inTable("users")
   
-  table.text("type");
+  table.enum("type",['lojista','colaborador', 'cliente', 'terceirizado']);
   table.text("victim_name");
   table.integer("age");
   table.text("phone");
@@ -14,8 +17,8 @@ exports.up = knex => knex.schema.createTable("called", table => {
 
 
 
-  table.timestamp("created_at").default(knex.fn.now());
-  table.timestamp("updated_at").default(knex.fn.now());
+  table.timestamp("created_at").default(now);
+  table.timestamp("updated_at").default(now);
 });
 
 exports.down = knex => knex.schema.dropTable("called");
