@@ -72,44 +72,7 @@ class UsersController {
     return res.json()
   }
 
-  async updateAdm(req, res) {
-
-    const {  email, password, name  } = req.body
-
-    const {user_id} = req.query
-
-    const database = await sqliteConnection()
-
-    const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id])
-    console.log(user);
-    if (!user) {
-      throw new AppError("Usuário não encontrado")
-    }
-    user.name = name ?? user.name
-    user.email = email ?? user.email
-
-    const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email])
-    
-    if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
-      throw new AppError("Este email ja esta em uso")
-    }
-
-  
-      user.password = await hash(password, 8)
-    
-
-    await database.run(`
-      UPDATE users SET
-      name = ?,
-      email = ?,
-      password = ?,
-      updated_at = DATETIME('now')
-      WHERE id = ?
-    `, [user.name, user.email, user.password, user.id])
-
-  
-    return res.json()
-  }
+ 
 
   async showCalled (req, res){
     const user_id = req.user.id
@@ -117,7 +80,6 @@ class UsersController {
     const called = await knex("called")
     .where({user_id})
 
-    console.log(called);
     return res.json({called})
   }
 }

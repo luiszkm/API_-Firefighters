@@ -9,6 +9,6 @@ const  addressController = new AddressController()
 addressRoutes.use(ensureAuthenticated)
 
 addressRoutes.post('/', addressController.create)
-addressRoutes.put('/:id', addressController.update)
+addressRoutes.get('/:id', addressController.show)
 
 module.exports = addressRoutes

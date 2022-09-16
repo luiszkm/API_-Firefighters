@@ -10,7 +10,10 @@ const admRouter = Router()
 const  admController = new AdmController()
 
 admRouter.use(ensureAuthenticated)
+admRouter.put("/userUpdate/:id", admController.updateAdm)
 
-admRouter.get('/', admController.show)
+admRouter.get('/called', admController.show)
+admRouter.get('/', admController.showUsers)
+admRouter.get('/:id', admController.showUser)
 
 module.exports = admRouter

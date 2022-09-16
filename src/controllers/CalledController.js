@@ -39,7 +39,7 @@ class CalledController {
         escortPhone,
         escortName,
         user_id,
-        user_name:userName,
+        user_name: userName,
         created_at: now
       })
 
@@ -145,13 +145,20 @@ class CalledController {
 
   async show(req, res) {
     const { id } = req.params
+    
+    const called = await knex
+      .select([
+        'address.*',
+        'called.*',
+        'attendance.*'
+      ])
+      .from("called")
+      .innerJoin('users', 'users.id', 'called.user_id')
+      .innerJoin('address', 'address.called_id', 'called.id')
+      .innerJoin('attendance', 'attendance.called_id', 'called.id')
+      .where('called.id', [id]).first()
 
 
-   
-
-    const called = await knex("called")
-      .where({ id })
-      .first()
     const clinical = await knex("clinical")
       .where({ called_id: id })
       .orderBy("clinical_name")
@@ -160,11 +167,24 @@ class CalledController {
       .orderBy("traumas_name")
 
 
+    const procedures = await knex("procedures")
+      .where({ called_id: id })
+      .orderBy("procedures_name")
+
+    const wound = await knex("wound")
+      .where({ called_id: id })
+      .orderBy("wound_name")
+
+    
+  
+
     return res.json({
       ...called,
       clinical,
       traumas,
-      
+      procedures,
+      wound
+
     })
   }
 
