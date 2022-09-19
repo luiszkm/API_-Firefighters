@@ -16,8 +16,8 @@ class CalledController {
       city,
       traumas,
       clinical,
-      wound,
-      procedures, usedMaterial,
+      wounds,
+      procedures, usedMaterials,
       userName
     } = req.body
 
@@ -25,7 +25,6 @@ class CalledController {
 
     let today = new Date();
     const now = today.toLocaleString();
-
 
     const called_id = await knex("called")
       .insert({
@@ -42,7 +41,6 @@ class CalledController {
         user_name: userName,
         created_at: now
       })
-
 
     await knex("address").insert(
       {
@@ -87,21 +85,20 @@ class CalledController {
 
     await knex("traumas").insert(traumasInsert)
 
-    const woundsInsert = wound.map(wound => {
+    const woundsInsert = wounds.map(wound_name => {
       return {
         user_id,
-        wound_name: wound.name,
-        wound_local: wound.local,
+        wound_name,
         called_id,
       }
     })
 
     await knex("wound").insert(woundsInsert)
 
-    const proceduresInsert = procedures.map(procedures => {
+    const proceduresInsert = procedures.map(procedures_name => {
       return {
         user_id,
-        procedures_name: procedures,
+        procedures_name,
         called_id,
       }
     })
@@ -110,11 +107,10 @@ class CalledController {
     await knex("procedures").insert(proceduresInsert)
 
 
-    const used_materialInsert = usedMaterial.map(material => {
+    const used_materialInsert = usedMaterials.map(material_name => {
       return {
         user_id,
-        material_name: material.name,
-        material_amount: material.amount,
+        material_name,
         called_id,
       }
     })
@@ -200,14 +196,15 @@ class CalledController {
   async index(req, res) {
 
     const user_id = req.user.id
-    const { victim_name } = req.query
-    const { rg } = req.query
+    const { victim_name,rg } = req.query
+
 
     const called = await knex("called")
-      .where({ user_id })
-      .whereLike("victim_name ", `%${victim_name}%`)
-      .whereLike("rg ", `%${rg}%`)
-      .orderBy("victim_name")
+      .where('called.user_id', user_id)
+      .whereLike("called.victim_name ", `%${victim_name}%`)
+      //.whereLike("called.rg ", `%${rg}%`)
+     .orderBy("id")
+
 
 
     return res.json(called)

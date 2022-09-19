@@ -12,6 +12,6 @@ calledRoutes.get('/',ensureAuthenticated, callerController.index)
 calledRoutes.post('/',ensureAuthenticated ,callerController.create)
 calledRoutes.get('/:id',ensureAuthenticated, callerController.show)
 calledRoutes.put('/:id',admAuthenticated, callerController.update)
-calledRoutes.delete('/:id', callerController.delete)
+calledRoutes.delete('/:id',admAuthenticated, callerController.delete)
 
 module.exports = calledRoutes
