@@ -171,15 +171,18 @@ class CalledController {
       .where({ called_id: id })
       .orderBy("wound_name")
 
-    
+    const materials = await knex("used_material")
+    .where({ called_id: id})
   
+      console.log(materials);
 
     return res.json({
       ...called,
       clinical,
       traumas,
       procedures,
-      wound
+      wound,
+      materials
 
     })
   }

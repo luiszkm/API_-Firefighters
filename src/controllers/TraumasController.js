@@ -1,8 +1,8 @@
 const knex = require("../database/knex")
 
 
-class ClinicalController {
-  async index(req, res) {
+class TraumasController {
+  async show(req, res) {
     const  {called_id}  = req.query
 
     const traumas = await knex("traumas")
@@ -13,4 +13,4 @@ class ClinicalController {
   }
 }
 
-module.exports = ClinicalController
+module.exports = TraumasController

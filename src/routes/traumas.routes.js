@@ -1,13 +1,13 @@
 const {Router} = require("express")
 
-const ClinicalController = require("../controllers/ClinicalController")
+const TraumasController = require("../controllers/TraumasController")
 
 const ensureAuthenticated = require("../middleware/ensureAuthenticated")
 
-const clinicalRoutes = Router()
+const traumasRoutes = Router()
 
-const  clinicalController = new ClinicalController()
+const  traumasController = new TraumasController()
 
-clinicalRoutes.get('/',ensureAuthenticated, clinicalController.index)
+traumasRoutes.get('/',ensureAuthenticated, traumasController.show)
 
-module.exports = clinicalRoutes
+module.exports = traumasRoutes

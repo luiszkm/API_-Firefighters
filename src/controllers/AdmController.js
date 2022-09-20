@@ -17,6 +17,7 @@ class AdmController {
   async showUsers(req, res) {
 
     const users = await knex("users")
+    .where('admin',null)
     
 /*
     const users = await knex
