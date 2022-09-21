@@ -9,7 +9,7 @@ const admRouter = Router()
 
 const  admController = new AdmController()
 
-admRouter.use(ensureAuthenticated)
+admRouter.use(admAuthenticated)
 admRouter.put("/userUpdate/:id", admController.updateAdm)
 
 admRouter.get('/called', admController.show)

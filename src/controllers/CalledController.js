@@ -187,14 +187,6 @@ class CalledController {
     })
   }
 
-  async delete(request, response) {
-    const { id } = request.params
-    await knex("called")
-      .where({ id })
-      .delete()
-
-    return response.json()
-  }
 
   async index(req, res) {
 
