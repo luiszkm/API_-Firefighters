@@ -14,6 +14,10 @@ class CalledController {
       number,
       district,
       city,
+      transmission,
+      coming,
+      exit,
+      release,
       traumas,
       clinical,
       wounds,
@@ -58,8 +62,9 @@ class CalledController {
 
     await knex("attendance")
       .insert({
-        user_id, called_id, pa1, timePa1, pa2, timePa2,
-        temperature, pulse, spo2, victim_destiny: victimDestiny, descriptions
+        user_id, called_id, pa1, timePa1, pa2, timePa2, transmission,
+        coming, exit, release, temperature, pulse, spo2,
+        victim_destiny: victimDestiny, descriptions
         , created_at: now
 
       })
@@ -141,7 +146,7 @@ class CalledController {
 
   async show(req, res) {
     const { id } = req.params
-    
+
     const called = await knex
       .select([
         'address.*',
@@ -172,9 +177,9 @@ class CalledController {
       .orderBy("wound_name")
 
     const materials = await knex("used_material")
-    .where({ called_id: id})
-  
-      console.log(materials);
+      .where({ called_id: id })
+
+    console.log(materials);
 
     return res.json({
       ...called,
@@ -191,14 +196,14 @@ class CalledController {
   async index(req, res) {
 
     const user_id = req.user.id
-    const { victim_name,rg } = req.query
+    const { victim_name, rg } = req.query
 
 
     const called = await knex("called")
       .where('called.user_id', user_id)
       .whereLike("called.victim_name ", `%${victim_name}%`)
       //.whereLike("called.rg ", `%${rg}%`)
-     .orderBy("id")
+      .orderBy("id")
 
 
 

@@ -11,6 +11,10 @@ exports.up = knex => knex.schema.createTable("attendance", table => {
   table.text("temperature")
   table.text("pulse")
   table.text("spo2")
+  table.text("transmission")
+  table.text("coming")
+  table.text("exit")
+  table.text("release")
   table.text("victim_destiny")
   table.text("descriptions")
   
