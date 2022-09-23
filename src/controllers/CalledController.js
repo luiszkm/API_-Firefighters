@@ -211,6 +211,15 @@ class CalledController {
 
   }
 
+  async delete(req, res){
+
+    const {id} = req.params
+      await knex("called").
+      where({id}).delete()
+
+
+      return res.json()
+  }
 }
 
 module.exports = CalledController
