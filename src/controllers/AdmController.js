@@ -38,7 +38,6 @@ class AdmController {
       users
     })
   }
-
   async showUser(req, res) {
 
     const {id} = req.params
@@ -51,7 +50,6 @@ class AdmController {
       ...user
     )
   }
-
   async updateAdm(req, res) {
 
     const {  email, password, name  } = req.body
@@ -90,6 +88,22 @@ class AdmController {
   
     return res.json()
   }
+  async index(req, res) {
+
+    const { victim_name, rg } = req.query
+
+
+    const called = await knex("called")
+      .whereLike("called.victim_name ", `%${victim_name}%`)
+      //.whereLike("called.rg ", `%${rg}%`)
+      .orderBy("id")
+
+
+
+    return res.json(called)
+
+  }
+
 
 }
 

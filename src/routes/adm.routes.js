@@ -13,6 +13,8 @@ admRouter.use(admAuthenticated)
 admRouter.put("/userUpdate/:id", admController.updateAdm)
 
 admRouter.get('/called', admController.show)
+admRouter.get('/search', admController.index)
+
 admRouter.get('/', admController.showUsers)
 admRouter.get('/:id', admController.showUser)
 
